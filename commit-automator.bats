@@ -1,9 +1,11 @@
 @test "install sets up hook" {
-      DIR="a"
-      mkdir -p "${DIR}"
+      REPO="test-repo"
+      rm -rf "${REPO}"
+      git config --global init.defaultBranch main
+      git init "${REPO}"
+
+      ./commit-automator install "${REPO}"
+
       HOOK=".git/hooks/prepare-commit-msg"
-
-      run commit-automator install "${DIR}"
-
-      [ -f "${DIR}/${HOOK}" ]
+      test -f "${REPO}/${HOOK}"
 }
