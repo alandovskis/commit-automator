@@ -16,8 +16,6 @@ jobs:
     steps:
       - name: Setup BATS
         uses: mig4/setup-bats@v1
-        with:
-          bats-version: 1.4.0
 
       - uses: actions/checkout@v2
 
