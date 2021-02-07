@@ -2,6 +2,13 @@
 set -euo pipefail
 ROOT="$( cd $( dirname "${BASH_SOURCE[0]}" ) && pwd )"
 
+USAGE="Usage: commit-automator install"
+
+if [ "$#" -lt 1 ]; then
+        echo "${USAGE}"
+        exit 22
+fi
+
 ACTION=${1}
 shift
 

@@ -1,3 +1,11 @@
+USAGE="Usage: commit-automator install"
+
+@test "show usage when no action passed" {
+      local output=$(./commit-automator)
+
+      [ "${output}" == "${USAGE}" ]
+}
+
 @test "install sets up hook" {
       REPO="test-repo"
       rm -rf "${REPO}"
