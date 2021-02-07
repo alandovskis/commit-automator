@@ -2,11 +2,15 @@
 set -euo pipefail
 ROOT="$( cd $( dirname "${BASH_SOURCE[0]}" ) && pwd )"
 
-USAGE="Usage: commit-automator install"
-
-if [ "$#" -lt 1 ]; then
+usage()
+{
+        USAGE="Usage: commit-automator install\n install repo"
         echo "${USAGE}"
         exit 22
+}
+
+if [ "$#" -lt 1 ]; then
+        usage
 fi
 
 ACTION=${1}
@@ -14,6 +18,10 @@ shift
 
 case $ACTION in
      install)
+        if [ "$#" -lt 1 ]; then
+                usage
+        fi
+
         DIR=${1}
         shift
         HOOKS="${DIR}/.git/hooks"

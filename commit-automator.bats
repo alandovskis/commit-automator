@@ -1,4 +1,5 @@
-USAGE="Usage: commit-automator install"
+EINVAL=22
+USAGE="Usage: commit-automator install\n install repo"
 
 @test "show usage when no action passed" {
       local output=$(./commit-automator)
@@ -16,4 +17,10 @@ USAGE="Usage: commit-automator install"
 
       HOOK=".git/hooks/prepare-commit-msg"
       test -f "${REPO}/${HOOK}"
+}
+
+@test "install without argument fails" {
+      local output=$(./commit-automator install)
+
+      [ "${output}" == "${USAGE}" ]
 }
