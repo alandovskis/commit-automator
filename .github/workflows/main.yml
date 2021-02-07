@@ -14,13 +14,12 @@ jobs:
         os: [ubuntu-20.04, macos-10.15]
 
     steps:
+      - name: Setup BATS
+        uses: mig4/setup-bats@v1
+        with:
+          bats-version: 1.4.0
+
       - uses: actions/checkout@v2
 
-      - name: Install Bats
-        run: |
-             wget -O bats.zip "https://github.com/sstephenson/bats/archive/master.zip"
-             unzip bats.zip
-
       - name: Test
-        run: |
-          bats-master/bin/bats commit-automator.bats
+        run: bats -r .
