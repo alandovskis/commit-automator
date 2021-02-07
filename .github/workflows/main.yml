@@ -23,4 +23,4 @@ jobs:
 
       - name: Test
         run: |
-          bats commit-automator.bats
+          bats-master/bin/bats commit-automator.bats
