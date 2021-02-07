@@ -19,5 +19,8 @@ jobs:
 
       - uses: actions/checkout@v2
 
+      - name: Run
+        run: DIR="a" && mkdir -p "${DIR}" && HOOK=".git/hooks/prepare-commit-msg" && commit-automator install "${DIR}"
+
       - name: Test
         run: bats -r .
