@@ -7,6 +7,12 @@ USAGE="Usage: commit-automator install\n install repo"
       [ "${output}" == "${USAGE}" ]
 }
 
+@test "show usage when no valid action passed" {
+      local output=$(./commit-automator blah)
+
+      [ "${output}" == "${USAGE}" ]
+}
+
 @test "install sets up hook" {
       REPO="test-repo"
       rm -rf "${REPO}"
