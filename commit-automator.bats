@@ -6,6 +6,6 @@
 
       run ./commit-automator install "${REPO}"
 
-      HOOK=".git/hooks/prepare-commit-msg"
-      test -f "${REPO}/${HOOK}"
+      [ "$status" -eq 0 ]
+      test -f "${REPO}/git/hooks/prepare-commit-msg"
 }
