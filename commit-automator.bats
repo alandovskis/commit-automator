@@ -4,7 +4,7 @@
       git config --global init.defaultBranch main
       git init "${REPO}"
 
-      run ./commit-automator install "${REPO}"
+      ./commit-automator install "${REPO}"
 
       HOOK=".git/hooks/prepare-commit-msg"
       test -f "${REPO}/${HOOK}"
