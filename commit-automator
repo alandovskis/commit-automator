@@ -1,8 +1,14 @@
-ACTION=$(shift)
+#!/usr/bin/env bash
+set -euo pipefail
+set -x
 
-case action in
+ACTION=${1}
+shift
+
+case $ACTION in
      install)
-        DIR=$(shift)
+        DIR=${1}
+        shift
         HOOKS="${DIR}/.git/hooks"
         mkdir -p "${HOOKS}"
         cp "hooks/prepare-commit-msg" "${HOOKS}/."
