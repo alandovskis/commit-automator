@@ -31,6 +31,10 @@ case $ACTION in
         cp "${ROOT}/hooks/prepare-commit-msg" "${HOOKS}/."
         ;;
      register)
+        if [ "$#" -lt 2 ]; then
+                usage
+        fi
+
         BRANCH=${1}
         shift
 

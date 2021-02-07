@@ -42,3 +42,15 @@ USAGE="Usage: commit-automator install|register"
       local issue=$(cat "${BRANCH_FILE} | tr -d '\n'")
       [ "${result}" == "${issue}" ]
 }
+
+@test "register without branch and issue fails" {
+       local output=$(./commit-automator register)
+
+      [ "${output}" == "${USAGE}" ]
+}
+
+@test "register without issue fails" {
+      local output=$(./commit-automator register test)
+
+      [ "${output}" == "${USAGE}" ]
+}
