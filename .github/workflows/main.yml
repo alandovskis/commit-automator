@@ -16,6 +16,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Install Bats
+        run: |
+             wget -O bats.zip "https://github.com/sstephenson/bats/archive/master.zip"
+             unzip bats.zip
+
       - name: Test
         run: |
           bats commit-automator.bats
