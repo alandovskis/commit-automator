@@ -1,5 +1,5 @@
 EINVAL=22
-USAGE="Usage: commit-automator install\n install repo"
+USAGE="Usage: commit-automator install|register"
 
 @test "show usage when no action passed" {
       local output=$(./commit-automator)
@@ -29,4 +29,16 @@ USAGE="Usage: commit-automator install\n install repo"
       local output=$(./commit-automator install)
 
       [ "${output}" == "${USAGE}" ]
+}
+
+@test "register setups mapping between branch and issue" {
+      BRANCH="test"
+      ISSUE="AN-1"
+
+      ./commit-automator register "${BRANCH}" "${ISSUE}"
+
+      BRANCH_FILE="${HOME}/.config/commit-automator/branches/${BRANCH}"
+      test -f "${BRANCH_FILE}"
+      local issue=$(cat "${BRANCH_FILE} | tr -d '\n'")
+      [ "${result}" == "${issue}" ]
 }
