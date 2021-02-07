@@ -1,1 +1,10 @@
-exit 0
+ACTION=$(shift)
+
+case action in
+     install)
+        DIR=$(shift)
+        HOOKS="${DIR}/.git/hooks"
+        mkdir -p "${HOOKS}"
+        cp "hooks/prepare-commit-msg" "${HOOKS}/."
+        ;;
+esac
