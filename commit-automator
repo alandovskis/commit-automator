@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+ROOT="$( cd $( dirname "${BASH_SOURCE[0]}" ) && pwd )"
 
 ACTION=${1}
 shift
@@ -10,6 +11,6 @@ case $ACTION in
         shift
         HOOKS="${DIR}/.git/hooks"
         mkdir -p "${HOOKS}"
-        cp "hooks/prepare-commit-msg" "${HOOKS}/."
+        cp "${ROOT}/hooks/prepare-commit-msg" "${HOOKS}/."
         ;;
 esac
