@@ -58,11 +58,11 @@ USAGE="Usage: commit-automator install|prepare|register"
 @test "prepare formats message" {
 	local branch="test"
 	local issue="AN-1"
-    local commit_file=$(mktemp)
+	local commit_file=$(mktemp)
 
 	./commit-automator register "${branch}" "${issue}"
-    ./commit-automator prepare "${commit_file}" "${branch}"
+	./commit-automator prepare "${commit_file}" "${branch}"
 
-    local result=$(cat "${commit_file}" | tr -d '\n')
-    [ "${result}" == "Issue: ${issue}" ]
+	local result=$(cat "${commit_file}" | tr -d '\n')
+	[ "${result}" == "Issue: ${issue}" ]
 }
