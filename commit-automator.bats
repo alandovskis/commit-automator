@@ -1,5 +1,5 @@
 EINVAL=22
-USAGE="Usage: commit-automator install|register"
+USAGE="Usage: commit-automator install|prepare|register"
 
 @test "show usage when no action passed" {
 	local output=$(./commit-automator)
@@ -53,4 +53,16 @@ USAGE="Usage: commit-automator install|register"
 	local output=$(./commit-automator register test)
 
 	[ "${output}" == "${USAGE}" ]
+}
+
+@test "prepare formats message" {
+	local branch="test"
+	local issue="AN-1"
+    local commit_file=$(mktemp)
+
+	./commit-automator register "${branch}" "${issue}"
+    ./commit-automator prepare "${commit_file}" "${branch}"
+
+    local result=$(cat "${commit_file}" | tr -d '\n')
+    [ "${result}" == "Issue: ${issue}" ]
 }

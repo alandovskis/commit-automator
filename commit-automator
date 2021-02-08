@@ -5,7 +5,7 @@ ROOT="$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)"
 . "${ROOT}/inc-sh/commit-automator.inc.sh"
 
 usage() {
-	USAGE="Usage: commit-automator install|register"
+	USAGE="Usage: commit-automator install|prepare|register"
 	echo "${USAGE}"
 	exit 22
 }
@@ -20,6 +20,21 @@ install() {
 	HOOKS="${DIR}/.git/hooks"
 	mkdir -p "${HOOKS}"
 	cp "${ROOT}/hooks/prepare-commit-msg" "${HOOKS}/."
+}
+
+prepare() {
+        local commit_file="${1}"
+        shift
+
+	local branch="${1}"
+        shift
+
+        local branch_file="${CONFIG_BRANCHES}/${branch}"
+
+        if [ -f "${branch_file}" ]; then
+                local issue=$(cat "${branch_file}")
+                git interpret-trailers --in-place --trailer "Issue: ${issue}" "${commit_file}"
+        fi
 }
 
 register() {
@@ -49,6 +64,9 @@ case $ACTION in
 install)
 	install "$@"
 	;;
+prepare)
+        prepare "$@"
+        ;;
 register)
 	register "$@"
 	;;
