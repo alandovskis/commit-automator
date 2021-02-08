@@ -20,6 +20,8 @@ install() {
 	HOOKS="${DIR}/.git/hooks"
 	mkdir -p "${HOOKS}"
 	cp "${ROOT}/hooks/prepare-commit-msg" "${HOOKS}/."
+    echo -n "$(realpath $0) prepare " >> "${HOOKS}/prepare-commit-msg"
+    echo '${COMMIT_MSG_FILE} ${BRANCH}' >> "${HOOKS}/prepare-commit-msg"
 }
 
 prepare() {

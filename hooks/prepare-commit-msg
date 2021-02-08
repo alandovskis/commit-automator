@@ -4,11 +4,4 @@ ROOT_DIR="$( cd $( dirname "${BASH_SOURCE[0]}" ) && cd ../.. && pwd )"
 
 COMMIT_MSG_FILE=$1
 
-source "${ROOT_DIR}/scripts/inc-sh/commit-automator.inc.sh"
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
-BRANCH_FILE="${CONFIG_BRANCHES}/${BRANCH}"
-
-if [ -f "${BRANCH_FILE}" ]; then
-    ISSUE=$(cat "${BRANCH_FILE}")
-    git interpret-trailers --in-place --trailer "Issue: ${ISSUE}" "$COMMIT_MSG_FILE"
-fi
