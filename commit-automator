@@ -24,18 +24,8 @@ install()
         cp "${ROOT}/hooks/prepare-commit-msg" "${HOOKS}/."
 }
 
-if [ "$#" -lt 1 ]; then
-        usage
-fi
-
-ACTION=${1}
-shift
-
-case $ACTION in
-     install)
-        install "$@"
-        ;;
-     register)
+register()
+{
         if [ "$#" -lt 2 ]; then
                 usage
         fi
@@ -49,6 +39,21 @@ case $ACTION in
         mkdir -p "${CONFIG_BRANCHES}"
         BRANCH_FILE="${CONFIG_BRANCHES}/${BRANCH}"
         echo "${ISSUE}" > ${BRANCH_FILE}
+}
+
+if [ "$#" -lt 1 ]; then
+        usage
+fi
+
+ACTION=${1}
+shift
+
+case $ACTION in
+     install)
+        install "$@"
+        ;;
+     register)
+        register "$@"
         ;;
      *)
         usage
