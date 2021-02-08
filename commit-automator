@@ -1,61 +1,58 @@
 #!/usr/bin/env bash
 set -euo pipefail
-ROOT="$( cd $( dirname "${BASH_SOURCE[0]}" ) && pwd )"
+ROOT="$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)"
 
 . "${ROOT}/inc-sh/commit-automator.inc.sh"
 
-usage()
-{
-        USAGE="Usage: commit-automator install|register"
-        echo "${USAGE}"
-        exit 22
+usage() {
+	USAGE="Usage: commit-automator install|register"
+	echo "${USAGE}"
+	exit 22
 }
 
-install()
-{
-        if [ "$#" -lt 1 ]; then
-                usage
-        fi
+install() {
+	if [ "$#" -lt 1 ]; then
+		usage
+	fi
 
-        DIR=${1}
-        shift
-        HOOKS="${DIR}/.git/hooks"
-        mkdir -p "${HOOKS}"
-        cp "${ROOT}/hooks/prepare-commit-msg" "${HOOKS}/."
+	DIR=${1}
+	shift
+	HOOKS="${DIR}/.git/hooks"
+	mkdir -p "${HOOKS}"
+	cp "${ROOT}/hooks/prepare-commit-msg" "${HOOKS}/."
 }
 
-register()
-{
-        if [ "$#" -lt 2 ]; then
-                usage
-        fi
+register() {
+	if [ "$#" -lt 2 ]; then
+		usage
+	fi
 
-        BRANCH=${1}
-        shift
+	BRANCH=${1}
+	shift
 
-        ISSUE=${1}
-        shift
+	ISSUE=${1}
+	shift
 
-        mkdir -p "${CONFIG_BRANCHES}"
-        BRANCH_FILE="${CONFIG_BRANCHES}/${BRANCH}"
-        echo "${ISSUE}" > ${BRANCH_FILE}
+	mkdir -p "${CONFIG_BRANCHES}"
+	BRANCH_FILE="${CONFIG_BRANCHES}/${BRANCH}"
+	echo "${ISSUE}" >${BRANCH_FILE}
 }
 
 if [ "$#" -lt 1 ]; then
-        usage
+	usage
 fi
 
 ACTION=${1}
 shift
 
 case $ACTION in
-     install)
-        install "$@"
-        ;;
-     register)
-        register "$@"
-        ;;
-     *)
-        usage
-        ;;
+install)
+	install "$@"
+	;;
+register)
+	register "$@"
+	;;
+*)
+	usage
+	;;
 esac
