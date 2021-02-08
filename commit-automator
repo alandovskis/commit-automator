@@ -11,15 +11,8 @@ usage()
         exit 22
 }
 
-if [ "$#" -lt 1 ]; then
-        usage
-fi
-
-ACTION=${1}
-shift
-
-case $ACTION in
-     install)
+install()
+{
         if [ "$#" -lt 1 ]; then
                 usage
         fi
@@ -29,6 +22,18 @@ case $ACTION in
         HOOKS="${DIR}/.git/hooks"
         mkdir -p "${HOOKS}"
         cp "${ROOT}/hooks/prepare-commit-msg" "${HOOKS}/."
+}
+
+if [ "$#" -lt 1 ]; then
+        usage
+fi
+
+ACTION=${1}
+shift
+
+case $ACTION in
+     install)
+        install "$@"
         ;;
      register)
         if [ "$#" -lt 2 ]; then
