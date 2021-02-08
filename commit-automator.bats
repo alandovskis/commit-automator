@@ -15,7 +15,6 @@ USAGE="Usage: commit-automator install|prepare|register"
 
 @test "install sets up hook" {
 	REPO="test-repo"
-	rm -rf "${REPO}"
 	git config --global init.defaultBranch main
 	git init "${REPO}"
 
@@ -23,6 +22,8 @@ USAGE="Usage: commit-automator install|prepare|register"
 
 	HOOK=".git/hooks/prepare-commit-msg"
 	test -f "${REPO}/${HOOK}"
+
+	rm -rf "${REPO}"
 }
 
 @test "install without argument fails" {
