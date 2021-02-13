@@ -64,6 +64,6 @@ USAGE="Usage: commit-automator install|prepare|register"
 	./commit-automator register "${branch}" "${issue}"
 	./commit-automator prepare "${commit_file}" "${branch}"
 
-	local result=$(cat "${commit_file}" | tr -d '\n')
+	local result=$(tail -n 1 "${commit_file}")
 	[ "${result}" == "Issue: ${issue}" ]
 }

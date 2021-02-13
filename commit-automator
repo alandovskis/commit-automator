@@ -35,6 +35,7 @@ prepare() {
 
 	if [ -f "${branch_file}" ]; then
 		local issue=$(cat "${branch_file}")
+		echo "" > "${commit_file}"
 		git interpret-trailers --in-place --trailer "Issue: ${issue}" "${commit_file}"
 	fi
 }
