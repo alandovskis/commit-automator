@@ -51,15 +51,15 @@ register() {
 		usage
 	fi
 
-	BRANCH=${1}
+	local branch=${1}
 	shift
 
-	ISSUE=${1}
+	local issue=${1}
 	shift
 
 	mkdir -p "${CONFIG_BRANCHES}"
-	BRANCH_FILE="${CONFIG_BRANCHES}/${BRANCH}"
-	echo "${ISSUE}" >${BRANCH_FILE}
+	local branch_file="${CONFIG_BRANCHES}/${branch}"
+	echo "${issue}" >${branch_file}
 }
 
 if [ "$#" -lt 1 ]; then
