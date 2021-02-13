@@ -72,3 +72,13 @@ USAGE="Usage: commit-automator install|prepare|register"
 	local output=$(./commit-automator prepare)
 	[ "${output}" == "${USAGE}" ]
 }
+
+@test "prepare w/o having registered" {
+	local branch="test"
+	local issue="AN-1"
+	local commit_file=$(mktemp)
+
+	local output=$(./commit-automator prepare "${commit_file}")
+
+	[ "${output}" == "Please run commit-automator register ISSUE first." ]
+}
