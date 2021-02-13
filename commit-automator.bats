@@ -1,3 +1,5 @@
+set -u
+
 EINVAL=22
 USAGE="Usage: commit-automator install|prepare|register"
 
