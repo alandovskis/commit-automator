@@ -67,3 +67,8 @@ USAGE="Usage: commit-automator install|prepare|register"
 	local result=$(tail -n 1 "${commit_file}")
 	[ "${result}" == "Issue: ${issue}" ]
 }
+
+@test "prepare missing file show usage" {
+	local output=$(./commit-automator prepare)
+	[ "${output}" == "${USAGE}" ]
+}

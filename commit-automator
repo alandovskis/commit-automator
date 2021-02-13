@@ -24,6 +24,10 @@ install() {
 }
 
 prepare() {
+	if [ "$#" -lt 1 ]; then
+		usage
+	fi
+
 	local commit_file="${1}"
 	shift
 
