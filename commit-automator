@@ -5,8 +5,7 @@ ROOT="$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)"
 . "${ROOT}/inc-sh/commit-automator.inc.sh"
 
 usage() {
-	USAGE="Usage: commit-automator install|prepare|register"
-	echo "${USAGE}"
+	echo "Usage: commit-automator install|prepare|register"
 	exit 22
 }
 
