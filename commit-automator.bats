@@ -2,6 +2,7 @@ set -u
 
 EINVAL=22
 USAGE="Usage: commit-automator install|prepare|register"
+CONFIG_BRANCHES="${HOME}/.config/commit-automator"
 
 @test "show usage when no action passed" {
 	local output=$(./commit-automator)
@@ -40,10 +41,12 @@ USAGE="Usage: commit-automator install|prepare|register"
 
 	./commit-automator register "${BRANCH}" "${ISSUE}"
 
-	BRANCH_FILE="${HOME}/.config/commit-automator/branches/${BRANCH}"
+	BRANCH_FILE="${CONFIG_BRANCHES}/branches/${BRANCH}"
 	test -f "${BRANCH_FILE}"
-	local issue=$(cat "${BRANCH_FILE} | tr -d '\n'")
-	[ "${result}" == "${issue}" ]
+	local issue=$(cat ${BRANCH_FILE} | tr -d '\n')
+	[ x"${issue}"x == x"${ISSUE}"x ]
+
+    rm -rf "${CONFIG_BRANCHES}"
 }
 
 @test "register without branch and issue fails" {
