@@ -4,6 +4,16 @@ EINVAL=22
 USAGE="Usage: commit-automator install|prepare|register"
 CONFIG_BRANCHES="${HOME}/.config/commit-automator"
 
+prepare_repo()
+{
+    local branch="${1}"
+
+	local repo=$(mktemp -d)
+	git -C "${repo}" init >/dev/null
+	git -C "${repo}" switch -c "${branch}"
+    echo "${repo}"
+}
+
 @test "show usage when no action passed" {
 	local output=$(./commit-automator)
 
@@ -64,6 +74,8 @@ CONFIG_BRANCHES="${HOME}/.config/commit-automator"
 @test "prepare formats message" {
 	local branch="test"
 	local issue="AN-1"
+
+    local repo=$(prepare_repo "${branch}")
 	local commit_file=$(mktemp)
 
 	./commit-automator register "${branch}" "${issue}"
@@ -81,6 +93,8 @@ CONFIG_BRANCHES="${HOME}/.config/commit-automator"
 @test "prepare w/o having registered" {
 	local branch="unregistered"
 	local issue="AN-1"
+
+    local repo=$(prepare_repo "${branch}")
 	local commit_file=$(mktemp)
 
 	local output=$(./commit-automator prepare "${commit_file}" "${branch}")
