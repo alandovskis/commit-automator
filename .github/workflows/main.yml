@@ -19,5 +19,8 @@ jobs:
 
       - uses: actions/checkout@v2
 
+      - name: Configure Comitter
+        run: git config --global user.name "Test"; git config --global user.email "test@test.com"
+
       - name: Test
         run: bats -r .
