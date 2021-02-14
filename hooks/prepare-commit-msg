@@ -3,5 +3,3 @@
 ROOT_DIR="$( cd $( dirname "${BASH_SOURCE[0]}" ) && cd ../.. && pwd )"
 
 COMMIT_MSG_FILE=$1
-
-BRANCH=$(git rev-parse --abbrev-ref HEAD)

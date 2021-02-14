@@ -6,12 +6,17 @@ CONFIG_BRANCHES="${HOME}/.config/commit-automator"
 
 prepare_repo()
 {
-    local branch="${1}"
+	local branch="${1}"
 
-	local repo=$(mktemp -d)
-	git -C "${repo}" init >/dev/null
-	git -C "${repo}" switch -c "${branch}"
-    echo "${repo}"
+	REPO=$(mktemp -d)
+	git -C "${REPO}" init >/dev/null
+	git -C "${REPO}" switch -c "${branch}"
+
+	local file="test"
+	touch "${REPO}/${file}"
+	git -C "${REPO}" add "${file}"
+	git -C "${REPO}" commit -m "init"
+	echo "${REPO}"
 }
 
 @test "show usage when no action passed" {
@@ -75,11 +80,14 @@ prepare_repo()
 	local branch="test"
 	local issue="AN-1"
 
-    local repo=$(prepare_repo "${branch}")
+	prepare_repo "${branch}"
 	local commit_file=$(mktemp)
 
-	./commit-automator register "${branch}" "${issue}"
-	./commit-automator prepare "${commit_file}" "${branch}"
+	local root=$(pwd)
+	local commit_automator="${root}/commit-automator"
+	cd "${REPO}"
+	"${commit_automator}" register "${branch}" "${issue}"
+	"${commit_automator}" prepare "${commit_file}"
 
 	local result=$(tail -n 1 "${commit_file}")
 	[ "${result}" == "Issue: ${issue}" ]
@@ -88,16 +96,4 @@ prepare_repo()
 @test "prepare missing file show usage" {
 	local output=$(./commit-automator prepare)
 	[ "${output}" == "${USAGE}" ]
-}
-
-@test "prepare w/o having registered" {
-	local branch="unregistered"
-	local issue="AN-1"
-
-    local repo=$(prepare_repo "${branch}")
-	local commit_file=$(mktemp)
-
-	local output=$(./commit-automator prepare "${commit_file}" "${branch}")
-
-	[ "${output}" == "Please run commit-automator register ISSUE first." ]
 }

@@ -24,16 +24,14 @@ install() {
 }
 
 prepare() {
-	if [ "$#" -lt 2 ]; then
+	if [ "$#" -lt 1 ]; then
 		usage
 	fi
 
 	local commit_file="${1}"
 	shift
 
-	local branch="${1}"
-	shift
-
+	local branch=$(git rev-parse --abbrev-ref HEAD)
 	local branch_file="${CONFIG_BRANCHES}/${branch}"
 
 	if [ ! -f "${branch_file}" ]; then
