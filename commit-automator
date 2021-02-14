@@ -34,14 +34,11 @@ prepare() {
 	local branch=$(git rev-parse --abbrev-ref HEAD)
 	local branch_file="${CONFIG_BRANCHES}/${branch}"
 
-	if [ ! -f "${branch_file}" ]; then
-		echo "Please run commit-automator register ISSUE first."
-		exit 1
+	if [ -f "${branch_file}" ]; then
+		local issue=$(cat "${branch_file}")
+		echo "" > "${commit_file}"
+		git interpret-trailers --in-place --trailer "Issue: ${issue}" "${commit_file}"
 	fi
-
-	local issue=$(cat "${branch_file}")
-	echo "" > "${commit_file}"
-	git interpret-trailers --in-place --trailer "Issue: ${issue}" "${commit_file}"
 }
 
 register() {
