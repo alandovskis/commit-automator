@@ -42,12 +42,11 @@ prepare() {
 }
 
 register() {
-	if [ "$#" -lt 2 ]; then
+	if [ "$#" -lt 1 ]; then
 		usage
 	fi
 
-	local branch=${1}
-	shift
+	local branch=$(git rev-parse --abbrev-ref HEAD)
 
 	local issue=${1}
 	shift

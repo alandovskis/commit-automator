@@ -50,28 +50,26 @@ prepare_repo()
 	[ "${output}" == "${USAGE}" ]
 }
 
-@test "register setups mapping between branch and issue" {
-	BRANCH="test"
-	ISSUE="AN-1"
+@test "register sets up mapping between branch and issue" {
+	local branch="registered"
+	local issue="AN-1"
+	prepare_repo "${branch}"
 
-	./commit-automator register "${BRANCH}" "${ISSUE}"
+	local root=$(pwd)
+	local commit_automator="${root}/commit-automator"
+    cd "${REPO}"
+	"${commit_automator}" register "${issue}"
 
-	BRANCH_FILE="${CONFIG_BRANCHES}/branches/${BRANCH}"
-	test -f "${BRANCH_FILE}"
-	local issue=$(cat ${BRANCH_FILE} | tr -d '\n')
-	[ x"${issue}"x == x"${ISSUE}"x ]
+	branch_file="${CONFIG_BRANCHES}/branches/${branch}"
+	test -f "${branch_file}"
+	local actual_issue=$(cat ${branch_file} | tr -d '\n')
+	[ x"${actual_issue}"x == x"${issue}"x ]
 
     rm -rf "${CONFIG_BRANCHES}"
 }
 
-@test "register without branch and issue fails" {
-	local output=$(./commit-automator register)
-
-	[ "${output}" == "${USAGE}" ]
-}
-
 @test "register without issue fails" {
-	local output=$(./commit-automator register test)
+	local output=$(./commit-automator register)
 
 	[ "${output}" == "${USAGE}" ]
 }
@@ -86,7 +84,7 @@ prepare_repo()
 	local root=$(pwd)
 	local commit_automator="${root}/commit-automator"
 	cd "${REPO}"
-	"${commit_automator}" register "${branch}" "${issue}"
+	"${commit_automator}" register "${issue}"
 	"${commit_automator}" prepare "${commit_file}"
 
 	local result=$(tail -n 1 "${commit_file}")
