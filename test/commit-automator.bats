@@ -1,8 +1,9 @@
 set -u
 
-EINVAL=22
 USAGE="Usage: commit-automator install|prepare|register"
 CONFIG_BRANCHES="${HOME}/.config/commit-automator"
+
+ERROR_INVALID_VALUE=22
 
 prepare_repo()
 {
@@ -20,15 +21,15 @@ prepare_repo()
 }
 
 @test "show usage when no action passed" {
-	local output=$(./commit-automator)
-
-	[ "${output}" == "${USAGE}" ]
+  run ./commit-automator
+	[ "$status" -eq ${ERROR_INVALID_VALUE} ]
+	[ "$output" = "${USAGE}" ]
 }
 
 @test "show usage when no valid action passed" {
-	local output=$(./commit-automator blah)
-
-	[ "${output}" == "${USAGE}" ]
+	run ./commit-automator blah
+  [ "$status" -eq ${ERROR_INVALID_VALUE} ]
+ 	[ "$output" = "${USAGE}" ]
 }
 
 @test "install sets up hook" {
@@ -45,9 +46,9 @@ prepare_repo()
 }
 
 @test "install without argument fails" {
-	local output=$(./commit-automator install)
-
-	[ "${output}" == "${USAGE}" ]
+	run ./commit-automator install
+  [ "$status" -eq ${ERROR_INVALID_VALUE} ]
+	[ "$output" = "${USAGE}" ]
 }
 
 @test "register sets up mapping between branch and issue" {
@@ -69,9 +70,9 @@ prepare_repo()
 }
 
 @test "register without issue fails" {
-	local output=$(./commit-automator register)
-
-	[ "${output}" == "${USAGE}" ]
+	run ./commit-automator register
+  [ "$status" -eq ${ERROR_INVALID_VALUE} ]
+	[ "$output" = "${USAGE}" ]
 }
 
 @test "prepare formats message" {
@@ -92,6 +93,7 @@ prepare_repo()
 }
 
 @test "prepare missing file show usage" {
-	local output=$(./commit-automator prepare)
-	[ "${output}" == "${USAGE}" ]
+	run ./commit-automator prepare
+	[ "$status" -eq ${ERROR_INVALID_VALUE} ]
+	[ "$output" = "${USAGE}" ]
 }
