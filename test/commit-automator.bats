@@ -51,8 +51,26 @@ prepare_repo()
     [ "$output" = "${USAGE}" ]
 }
 
-@test "register sets up mapping between branch and issue" {
+@test "register sets up mapping between branch and issue w/o slash" {
     local branch="registered"
+    local issue="AN-1"
+    prepare_repo "${branch}"
+
+    local root=$(pwd)
+    local commit_automator="${root}/commit-automator"
+    cd "${REPO}"
+    "${commit_automator}" register "${issue}"
+
+    branch_file="${CONFIG_BRANCHES}/branches/${branch}"
+    test -f "${branch_file}"
+    local actual_issue=$(cat ${branch_file} | tr -d '\n')
+    [ x"${actual_issue}"x == x"${issue}"x ]
+
+    rm -rf "${CONFIG_BRANCHES}"
+}
+
+@test "register sets up mapping between branch and issue with slash" {
+    local branch="build/registered"
     local issue="AN-1"
     prepare_repo "${branch}"
 

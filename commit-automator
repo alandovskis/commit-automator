@@ -51,8 +51,19 @@ register() {
 	local issue=${1}
 	shift
 
-	mkdir -p "${CONFIG_BRANCHES}"
-	local branch_file="${CONFIG_BRANCHES}/${branch}"
+	local dir
+	local prefix=$(dirname "${branch}")
+	local suffix=$(basename "${branch}")
+	if [ "${prefix}" != "" ]; then
+		dir="${CONFIG_BRANCHES}/${prefix}"
+	else
+		dir="${CONFIG_BRANCHES}"
+	fi
+
+	mkdir -p "${dir}"
+
+	local branch_file
+	branch_file="${dir}/${suffix}"
 	echo "${issue}" >${branch_file}
 }
 
