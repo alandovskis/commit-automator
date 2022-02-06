@@ -33,9 +33,7 @@ prepare_repo()
 }
 
 @test "install sets up hook" {
-    REPO="test-repo"
-    git config --global init.defaultBranch main
-    git init "${REPO}"
+    REPO=$(prepare_repo "main")
 
     ./commit-automator install "${REPO}"
 
