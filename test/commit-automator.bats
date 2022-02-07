@@ -9,14 +9,18 @@ prepare_repo()
 {
     local branch="${1}"
 
-    REPO=$(mktemp -d)
-    git -C "${REPO}" init >/dev/null
+    repo=$(mktemp -d)
 
-    #local file="test"
-    #touch "${REPO}/${file}"
-    #git -C "${REPO}" add "${file}"
-    #git -C "${REPO}" commit -m "init"
-    echo "${REPO}"
+    cd "${repo}" >/dev/null
+    git init --quiet
+
+    local file="test"
+    touch "${file}"
+    git add "${file}" >/dev/null
+    git commit -m "init" >/dev/null
+    cd - >/dev/null
+
+    echo "${repo}"
 }
 
 @test "show usage when no action passed" {
@@ -32,16 +36,14 @@ prepare_repo()
 }
 
 @test "install sets up hook if core.hookspath not set" {
-    REPO=$(prepare_repo "main")
+    repo=$(prepare_repo "main")
 
-    pushd "${REPO}"
-    ${COMMIT_AUTOMATOR} install "${REPO}"
-    popd
+    ${COMMIT_AUTOMATOR} install "${repo}"
 
     HOOK=".git/hooks/prepare-commit-msg"
-    test -f "${REPO}/${HOOK}"
+    test -f "${repo}/${HOOK}"
 
-    rm -rf "${REPO}"
+    rm -rf "${repo}"
 }
 
 @test "install sets up hook if core.hookspath set" {
@@ -70,10 +72,12 @@ prepare_repo()
 @test "register sets up mapping between branch and issue w/o slash" {
     local branch="registered"
     local issue="AN-1"
-    prepare_repo "${branch}"
+    local repo=$(prepare_repo "${branch}")
 
-    cd "${REPO}"
+    cd "${repo}"
+    git switch -c "${branch}"
     "${COMMIT_AUTOMATOR}" register "${issue}"
+    cd -
 
     branch_file="${CONFIG_BRANCHES}/branches/${branch}"
     test -f "${branch_file}"
@@ -86,10 +90,12 @@ prepare_repo()
 @test "register sets up mapping between branch and issue with slash" {
     local branch="build/registered"
     local issue="AN-1"
-    prepare_repo "${branch}"
+    local repo=$(prepare_repo "${branch}")
 
-    cd "${REPO}"
+    cd "${repo}"
+    git switch -c "${branch}"
     "${COMMIT_AUTOMATOR}" register "${issue}"
+    cd -
 
     branch_file="${CONFIG_BRANCHES}/branches/${branch}"
     test -f "${branch_file}"
@@ -109,12 +115,13 @@ prepare_repo()
     local branch="test"
     local issue="AN-1"
 
-    prepare_repo "${branch}"
+    local repo=$(prepare_repo "${branch}")
     local commit_file=$(mktemp)
 
-    cd "${REPO}"
+    cd "${repo}"
     "${COMMIT_AUTOMATOR}" register "${issue}"
     "${COMMIT_AUTOMATOR}" prepare "${commit_file}"
+    cd -
 
     local result=$(tail -n 1 "${commit_file}")
     [ "${result}" == "Issue: ${issue}" ]

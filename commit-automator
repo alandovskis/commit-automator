@@ -17,13 +17,11 @@ install() {
 	DIR=${1}
 	shift
 
-  local hooksPath=$(git config core.hookspath)
-  echo "HP" ${hooksPath}
-	HOOKS="${DIR}/.git/hooks"
-	if [ x"${hooksPath}" = x"" ]; then
+  local hooksPath=$(git config --local core.hookspath)
+	if [ "${hooksPath}" = "" ]; then
 	  HOOKS="${DIR}/.git/hooks"
 	else
-	  HOOKS=${hooksPath}
+	  HOOKS="${DIR}/${hooksPath}"
 	fi
 
 	mkdir -p "${HOOKS}"
