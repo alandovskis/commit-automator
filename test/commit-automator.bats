@@ -2,7 +2,7 @@ set -u
 
 USAGE="Usage: commit-automator install|prepare|register"
 CONFIG_BRANCHES="${HOME}/.config/commit-automator"
-
+COMMIT_AUTOMATOR=$(realpath ./commit-automator)
 ERROR_INVALID_VALUE=22
 
 prepare_repo()
@@ -11,12 +11,11 @@ prepare_repo()
 
     REPO=$(mktemp -d)
     git -C "${REPO}" init >/dev/null
-    git -C "${REPO}" switch -c "${branch}"
 
-    local file="test"
-    touch "${REPO}/${file}"
-    git -C "${REPO}" add "${file}"
-    git -C "${REPO}" commit -m "init"
+    #local file="test"
+    #touch "${REPO}/${file}"
+    #git -C "${REPO}" add "${file}"
+    #git -C "${REPO}" commit -m "init"
     echo "${REPO}"
 }
 
@@ -32,12 +31,31 @@ prepare_repo()
     [ "$output" = "${USAGE}" ]
 }
 
-@test "install sets up hook" {
+@test "install sets up hook if core.hookspath not set" {
     REPO=$(prepare_repo "main")
 
-    ./commit-automator install "${REPO}"
+    pushd "${REPO}"
+    ${COMMIT_AUTOMATOR} install "${REPO}"
+    popd
 
     HOOK=".git/hooks/prepare-commit-msg"
+    test -f "${REPO}/${HOOK}"
+
+    rm -rf "${REPO}"
+}
+
+@test "install sets up hook if core.hookspath set" {
+    REPO=$(prepare_repo "main")
+
+    HOOKS="hooks"
+    git -C "${REPO}" config core.hookspath "${HOOKS}"
+    mkdir -p "${REPO}/${HOOKS}"
+
+    pushd "${REPO}"
+    ${COMMIT_AUTOMATOR} install "${REPO}"
+    popd
+
+    HOOK="${HOOKS}/prepare-commit-msg"
     test -f "${REPO}/${HOOK}"
 
     rm -rf "${REPO}"
@@ -54,10 +72,8 @@ prepare_repo()
     local issue="AN-1"
     prepare_repo "${branch}"
 
-    local root=$(pwd)
-    local commit_automator="${root}/commit-automator"
     cd "${REPO}"
-    "${commit_automator}" register "${issue}"
+    "${COMMIT_AUTOMATOR}" register "${issue}"
 
     branch_file="${CONFIG_BRANCHES}/branches/${branch}"
     test -f "${branch_file}"
@@ -72,10 +88,8 @@ prepare_repo()
     local issue="AN-1"
     prepare_repo "${branch}"
 
-    local root=$(pwd)
-    local commit_automator="${root}/commit-automator"
     cd "${REPO}"
-    "${commit_automator}" register "${issue}"
+    "${COMMIT_AUTOMATOR}" register "${issue}"
 
     branch_file="${CONFIG_BRANCHES}/branches/${branch}"
     test -f "${branch_file}"
@@ -98,11 +112,9 @@ prepare_repo()
     prepare_repo "${branch}"
     local commit_file=$(mktemp)
 
-    local root=$(pwd)
-    local commit_automator="${root}/commit-automator"
     cd "${REPO}"
-    "${commit_automator}" register "${issue}"
-    "${commit_automator}" prepare "${commit_file}"
+    "${COMMIT_AUTOMATOR}" register "${issue}"
+    "${COMMIT_AUTOMATOR}" prepare "${commit_file}"
 
     local result=$(tail -n 1 "${commit_file}")
     [ "${result}" == "Issue: ${issue}" ]

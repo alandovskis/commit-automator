@@ -16,7 +16,16 @@ install() {
 
 	DIR=${1}
 	shift
+
+  local hooksPath=$(git config core.hookspath)
+  echo "HP" ${hooksPath}
 	HOOKS="${DIR}/.git/hooks"
+	if [ x"${hooksPath}" = x"" ]; then
+	  HOOKS="${DIR}/.git/hooks"
+	else
+	  HOOKS=${hooksPath}
+	fi
+
 	mkdir -p "${HOOKS}"
 	cp "${ROOT}/hooks/prepare-commit-msg" "${HOOKS}/."
 	echo -n "$(realpath $0) prepare " >>"${HOOKS}/prepare-commit-msg"
